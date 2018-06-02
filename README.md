@@ -1,4 +1,4 @@
-#Enviroment Defaults
+# Enviroment Defaults
 
 ```
 ENV ETCD_SERVER="127.0.0.1"
