@@ -69,7 +69,8 @@ RUN set -ex \
     && cp -a ${API_KEY_PEM} ${API_KEY}
 
 
-
+ADD bin/create_user_keys.sh /create_user_keys.sh
+RUN chmod +x /create_user_keys.sh
 ADD bin/initial-setup-context-kube.sh /initial-setup-context-kube.sh
 RUN chmod +x /initial-setup-context-kube.sh
 ADD bin/start_apiserver.sh /start_apiserver.sh
