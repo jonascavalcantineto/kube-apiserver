@@ -44,7 +44,7 @@ USER="admin"
 PATH_BASE_KUBERNETES="/opt/kubernetes/apiserver"
 ```
 
-These variables are usuly to certificates path and  files
+These variables are to certificates path and  files
 ```
 DIR_CERTS="${PATH_BASE_KUBERNETES}/certificates"
 DIR_CERTS_SERVICES="${DIR_CERTS}/services"
@@ -94,8 +94,8 @@ docker run -d \
     --name kube-apiserver \
     --privileged \
     -p 6443:6443 \
-    -e ETCD_SERVER="172.31.134.8" \
-    -e APISERVER_IP="172.31.134.8" \
+    -e ETCD_SERVER="<APISERVER_IP>" \
+    -e APISERVER_IP="<APISERVER_IP>"" \
     -v /opt/kubernetes/cerfificates/services:/opt/kubernetes/apiserver/certificates/services \
     kube-apiserver:latest
 ```
