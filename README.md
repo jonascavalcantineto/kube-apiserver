@@ -1,57 +1,6 @@
-# Api Server v1.9.8
+# Kube-ApiServer v1.9.8
 
-# Enviroment Defaults
-
-```
-ENV ETCD_SERVER="127.0.0.1"
-ENV APISERVER_IP="127.0.0.1"
-ENV KUBERNETES_CLUSTER_RANGE_IP="10.254.0.0/16"
-ENV CLUSTER_NAME="cluster.local"
-ENV CONTEXT_NAME="default"
-ENV USER="admin"
-ENV PATH_BASE_KUBERNETES="/opt/kubernetes/apiserver"
-ENV DIR_CERTS="${PATH_BASE_KUBERNETES}/certificates"
-ENV DIR_CERTS_SERVICES="${DIR_CERTS}/services"
-ENV ADMIN_CERT_PEM="admin.pem"
-ENV ADMIN_KEY_PEM="admin-key.pem"
-ENV CA_CERT_PEM="ca.pem"
-ENV CA_CERT_PEM_KEY="ca-key.pem"
-ENV CERT_CA_SUBJ="cluster.local"
-ENV API_CERT_CRT="apiserver.crt"
-ENV API_KEY="apiserver.key"
-ENV API_CERT_PEM="apiserver.pem"
-ENV API_KEY_PEM="apiserver-key.pem"
-ENV API_CERT_CSR="apiserver.csr"
-
-```
-
-# Docker command
-```
-docker run -d 
-        --name <container_name> --privileged 
-        -p 6443:6443 -p  
-        -e ETCD_SERVER=<ip_server_etcd> 
-        -e APISERVER_IP=<ip_apiserver> 
-        -e KUBERNETES_CLUSTER_RANGE_IP=<network/mask> 
-        -e CLUSTER_NAME=<name.cluster> 
-        -e CONTEXT_NAME=<default> 
-        -e USER=<user_admin> 
-        -e PATH_BASE_KUBERNETES=<path_files_kube_apiserver> 
-        -e DIR_CERTS=<path_all_certificates> 
-        -e ADMIN_CERT_PEM=<cert_user_admin.pem> 
-        -e ADMIN_KEY_PEM=<user_admin-key.pem> 
-        -e CA_CERT_PEM=<ca_cert_PEM.pem> 
-        -e CA_CERT_PEM_KEY=<ca-key.pem>  
-        -e API_CERT_CRT=<apiserver.crt> 
-        -e API_KEY=<apiserver.key> 
-        -e API_CERT_PEM=<apiserver.pem> 
-        -e API_KEY_PEM=<apiserver-key.pem> 
-        -e TOKEN=<hash> (# dd if=/dev/urandom bs=128 count=1 2>/dev/null | base64 | tr -d "=+/" | dd bs=32 count=1 2>/dev/null)
-        -v <path_local_storage>:${DIR_CERTS}/services <image>:<tag>
-```
 # Kubernetes
-
-[![Submit Queue Widget]][Submit Queue] [![GoDoc Widget]][GoDoc] [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/569/badge)](https://bestpractices.coreinfrastructure.org/projects/569)
 
 <img src="https://github.com/kubernetes/kubernetes/raw/master/logo/logo.png" width="100">
 
@@ -74,46 +23,79 @@ read the CNCF [announcement].
 
 ----
 
-## To start using Kubernetes
+# Environment Variables
 
-See our documentation on [kubernetes.io].
+The kube-apiserver image uses several environment variables which are easy to miss. While none of the variables are required, they may significantly aid you in using the image.
 
-Try our [interactive tutorial].
-
-Take a free course on [Scalable Microservices with Kubernetes].
-
-## To start developing Kubernetes
-
-The [community repository] hosts all information about
-building Kubernetes from source, how to contribute code
-and documentation, who to contact about what, etc.
-
-If you want to build Kubernetes right away there are two options:
-
-##### You have a working [Go environment].
+This environment variable is recommended for you to use the kube-apiserver. 
+This is the way to reach in the etcd servers
+```
+ETCD_SERVER="127.0.0.1"
+APISERVER_IP="127.0.0.1"
 
 ```
-$ go get -d k8s.io/kubernetes
-$ cd $GOPATH/src/k8s.io/kubernetes
-$ make
+
+These variables are default configuration of the cluster Kubernetes
+```
+KUBERNETES_CLUSTER_RANGE_IP="10.254.0.0/16"
+CLUSTER_NAME="cluster.local"
+CONTEXT_NAME="default"
+USER="admin"
+PATH_BASE_KUBERNETES="/opt/kubernetes/apiserver"
 ```
 
-##### You have a working [Docker environment].
+These variables are usuly to certificates path and  files
+```
+DIR_CERTS="${PATH_BASE_KUBERNETES}/certificates"
+DIR_CERTS_SERVICES="${DIR_CERTS}/services"
+ADMIN_CERT_PEM="admin.pem"
+ADMIN_KEY_PEM="admin-key.pem"
+CA_CERT_PEM="ca.pem"
+CA_CERT_PEM_KEY="ca-key.pem"
+CERT_CA_SUBJ="cluster.local"
+API_CERT_CRT="apiserver.crt"
+API_KEY="apiserver.key"
+API_CERT_PEM="apiserver.pem"
+API_KEY_PEM="apiserver-key.pem"
+API_CERT_CSR="apiserver.csr"
 
 ```
-$ git clone https://github.com/kubernetes/kubernetes
-$ cd kubernetes
-$ make quick-release
+
+# How to use this image
+
+Start with docker command
 ```
+docker run -d 
+        --name <container_name> --privileged \
+        -p 6443:6443   \
+        -e ETCD_SERVER=<ip_server_etcd> \ 
+        -e APISERVER_IP=<ip_apiserver>  \
+        -e KUBERNETES_CLUSTER_RANGE_IP=<network/mask> \ 
+        -e CLUSTER_NAME=<name.cluster> \
+        -e CONTEXT_NAME=<default>  \
+        -e USER=<user_admin> \
+        -e PATH_BASE_KUBERNETES=<path_files_kube_apiserver> \ 
+        -e DIR_CERTS=<path_all_certificates>  \
+        -e ADMIN_CERT_PEM=<cert_user_admin.pem> \ 
+        -e ADMIN_KEY_PEM=<user_admin-key.pem> \ 
+        -e CA_CERT_PEM=<ca_cert_PEM.pem> \ 
+        -e CA_CERT_PEM_KEY=<ca-key.pem>  \ 
+        -e API_CERT_CRT=<apiserver.crt> \ 
+        -e API_KEY=<apiserver.key> \ 
+        -e API_CERT_PEM=<apiserver.pem> \ 
+        -e API_KEY_PEM=<apiserver-key.pem> \ 
+        -e TOKEN=<hash> \(# dd if=/dev/urandom bs=128 count=1 2>/dev/null | base64 | tr -d "=+/" | dd bs=32 count=1 2>/dev/null) 
+        -v <path_local_storage>:${DIR_CERTS}/services <image>:<tag> 
+```
+# Docker example
 
-For the full story, head over to the [developer's documentation].
-
-## Support
-
-If you need support, start with the [troubleshooting guide],
-and work your way through the process that we've outlined.
-
-That said, if you have questions, reach out to us
-[one way or another][communication].
-
-[announcement]: https://cncf.io/news/announcement/2015/07/new-cloud-native-computing-foundation-drive-alignment-among-container
+```
+docker run -d \
+    --name kube-apiserver \
+    --privileged \
+    -p 6443:6443 \
+    -e ETCD_SERVER="172.31.134.8" \
+    -e APISERVER_IP="172.31.134.8" \
+    -v /opt/kubernetes/cerfificates/services:/opt/kubernetes/apiserver/certificates/services \
+    kube-apiserver:latest
+```
