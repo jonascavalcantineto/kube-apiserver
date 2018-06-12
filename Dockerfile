@@ -11,16 +11,27 @@ RUN yum install -y \
 RUN yum update -y
 RUN yum install -y supervisor.noarch                 
 
-#SETUP APISERVER
+#ETCD SERVER
 ENV ETCD_SERVER="127.0.0.1"
 ENV APISERVER_IP="127.0.0.1"
+
+
+#CLUSTER DEFINITIONS
 ENV KUBERNETES_CLUSTER_RANGE_IP="10.254.0.0/16"
 ENV CLUSTER_NAME="cluster.local"
 ENV CONTEXT_NAME="default"
+
+#USER ADMIN
 ENV USER="admin"
-ENV PATH_BASE_KUBERNETES="/opt/kubernetes/apiserver"
-ENV DIR_CERTS="${PATH_BASE_KUBERNETES}/certificates"
-ENV DIR_CERTS_SERVICES="${DIR_CERTS}/services"
+
+#PATH KUBERNETES
+ENV PATH_BASE_KUBERNETES="/opt/kubernetes"
+ENV DIR_CERTS="${PATH_BASE_KUBERNETES}/certs"
+ENV DIR_CERTS_MODULES="${DIR_CERTS}/modules"
+ENV DIR_CERTS_USERS="${DIR_CERTS}/users"
+ENV DIR_CERTS_API="${DIR_CERTS}/api"
+
+#CERTS
 ENV ADMIN_CERT_PEM="admin.pem"
 ENV ADMIN_KEY_PEM="admin-key.pem"
 ENV CA_CERT_PEM="ca.pem"
@@ -47,34 +58,20 @@ RUN set -ex \
  	&& mkdir -p ${PATH_BASE_KUBERNETES}/bin \
     && cp -a /tmp/kubernetes/server/kubernetes/server/bin/{kube-apiserver,kubectl} ${PATH_BASE_KUBERNETES}/bin/ \
     && ln -s ${PATH_BASE_KUBERNETES}/bin/kubectl /usr/local/sbin/kubectl \
-    && ln -s ${PATH_BASE_KUBERNETES}/bin/kube-apiserver /usr/local/sbin/kube-apiserver \
-    && mkdir -p ${PATH_BASE_KUBERNETES}/{confs,certificates}/ \    
-    && mkdir -p ${DIR_CERTS_SERVICES} \
+    && ln -s ${PATH_BASE_KUBERNETES}/bin/kube-apiserver /usr/local/sbin/kube-apiserver \    
 	&& useradd kube \
 	&& chown -R kube:kube ${PATH_BASE_KUBERNETES}/ \
  	&& rm -rf /tmp/kubernetes \
 	&& rm -f kubernetes.tar.gz
 
-
-ADD conf/openssl.cnf ${DIR_CERTS}
-#GENERATE CERTIFICATES 
-RUN set -ex \
-    && cd ${DIR_CERTS} \
-    && openssl genrsa -out ${CA_CERT_PEM_KEY} 2048 \
-    && openssl req -x509 -new -nodes -key ${CA_CERT_PEM_KEY} -days 10000 -out ${CA_CERT_PEM} -subj "/CN=cluster.local" \
-    && openssl genrsa -out ${API_KEY_PEM} 2048 \
-    && openssl req -new -key ${API_KEY_PEM} -out ${API_CERT_CSR} -subj "/CN=kube-apiserver" -config openssl.cnf \
-    && openssl x509 -req -in ${API_CERT_CSR} -CA ${CA_CERT_PEM} -CAkey ${CA_CERT_PEM_KEY} -CAcreateserial -out ${API_CERT_PEM} -days 7200 -extensions v3_req -extfile openssl.cnf \
-    && cp -a ${API_CERT_PEM} ${API_CERT_CRT} \
-    && cp -a ${API_KEY_PEM} ${API_KEY}
-
-
+ADD conf/openssl.cnf /openssl.cnf 
 ADD bin/create_user_keys.sh /create_user_keys.sh
-RUN chmod +x /create_user_keys.sh
 ADD bin/initial-setup-context-kube.sh /initial-setup-context-kube.sh
-RUN chmod +x /initial-setup-context-kube.sh
 ADD bin/start_apiserver.sh /start_apiserver.sh
+RUN chmod +x /create_user_keys.sh
+RUN chmod +x /initial-setup-context-kube.sh
 RUN chmod +x /start_apiserver.sh
+
 #PORTS
 # TCP     6443*       Kubernetes API Server
 # TCP     2379-2380   etcd server client API

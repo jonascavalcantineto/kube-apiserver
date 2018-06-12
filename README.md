@@ -41,13 +41,17 @@ KUBERNETES_CLUSTER_RANGE_IP="10.254.0.0/16"
 CLUSTER_NAME="cluster.local"
 CONTEXT_NAME="default"
 USER="admin"
-PATH_BASE_KUBERNETES="/opt/kubernetes/apiserver"
+PATH_BASE_KUBERNETES="/opt/kubernetes"
+
 ```
 
-These variables are to certificates path and  files
+These variables are usuly to certificates path and  files
 ```
-DIR_CERTS="${PATH_BASE_KUBERNETES}/certificates"
-DIR_CERTS_SERVICES="${DIR_CERTS}/services"
+DIR_CERTS="${PATH_BASE_KUBERNETES}/certs"
+DIR_CERTS_MODULES="${DIR_CERTS}/modules"
+DIR_CERTS_USERS="${DIR_CERTS}/users"
+DIR_CERTS_API="${DIR_CERTS}/api"
+
 ADMIN_CERT_PEM="admin.pem"
 ADMIN_KEY_PEM="admin-key.pem"
 CA_CERT_PEM="ca.pem"
@@ -66,7 +70,8 @@ API_CERT_CSR="apiserver.csr"
 Start with docker command
 ```
 docker run -d 
-        --name <container_name> --privileged \
+        --name <container_name> 
+        --privileged \
         -p 6443:6443   \
         -e ETCD_SERVER=<ip_server_etcd> \ 
         -e APISERVER_IP=<ip_apiserver>  \
@@ -75,6 +80,9 @@ docker run -d
         -e CONTEXT_NAME=<default>  \
         -e USER=<user_admin> \
         -e PATH_BASE_KUBERNETES=<path_files_kube_apiserver> \ 
+        -e DIR_CERTS_MODULES="${DIR_CERTS}/modules"
+        -e DIR_CERTS_USERS="${DIR_CERTS}/users"
+        -e DIR_CERTS_API="${DIR_CERTS}/api"
         -e DIR_CERTS=<path_all_certificates>  \
         -e ADMIN_CERT_PEM=<cert_user_admin.pem> \ 
         -e ADMIN_KEY_PEM=<user_admin-key.pem> \ 
@@ -90,12 +98,6 @@ docker run -d
 # Docker example
 
 ```
-docker run -d \
-    --name kube-apiserver \
-    --privileged \
-    -p 6443:6443 \
-    -e ETCD_SERVER="<APISERVER_IP>" \
-    -e APISERVER_IP="<APISERVER_IP>"" \
-    -v /opt/kubernetes/cerfificates/services:/opt/kubernetes/apiserver/certificates/services \
-    kube-apiserver:latest
+docker run -d --name kube-apiserver --privileged=true -h kube-apiserver -p 6443:6443 -e ETCD_SERVER="172.31.134.8" -e APISERVER_IP="172.31.134.8" -e CLUSTER_NAME="company.local" -v /opt/kubernetes/certs/:/opt/kubernetes/certs/ kube-apiserver
+
 ```
