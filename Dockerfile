@@ -9,7 +9,11 @@ RUN yum install -y \
             openssl 
 
 RUN yum update -y
-RUN yum install -y supervisor.noarch                 
+RUN yum install -y \
+		supervisor.noarch \
+		curl \
+		bash-completion \
+		git
 
 #ETCD SERVER
 ENV ETCD_SERVER="127.0.0.1"
@@ -61,6 +65,7 @@ RUN set -ex \
     && ln -s ${PATH_BASE_KUBERNETES}/bin/kube-apiserver /usr/local/sbin/kube-apiserver \    
 	&& useradd kube \
 	&& chown -R kube:kube ${PATH_BASE_KUBERNETES}/ \
+	&& echo "source <(kubectl completion bash)" >> ~/.bashrc \
  	&& rm -rf /tmp/kubernetes \
 	&& rm -f kubernetes.tar.gz
 

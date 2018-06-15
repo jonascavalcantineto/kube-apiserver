@@ -98,6 +98,6 @@ docker run -d
 # Docker example
 
 ```
-docker run -d --name kube-apiserver --privileged=true -h kube-apiserver -p 6443:6443 -e ETCD_SERVER="172.31.134.8" -e APISERVER_IP="172.31.134.8" -e CLUSTER_NAME="company.local" -v /opt/kubernetes/certs/:/opt/kubernetes/certs/ kube-apiserver
+docker run -d --name kube-apiserver --privileged=true -h kube-apiserver -p 6443:6443 -e ETCD_SERVER="<ip_sever|dns>" -e APISERVER_IP="<ip_sever|dns>" -e CLUSTER_NAME="company.local" -v /opt/kubernetes/certs/:/opt/kubernetes/certs/ kube-apiserver
 
 ```
