@@ -14,9 +14,12 @@ DNS.1 = kubernetes
 DNS.2 = kubernetes.default
 DNS.3 = kubernetes.default.svc
 DNS.4 = kubernetes.default.svc.cluster.local
-DNS.5 = funceme.br
-DNS.6 = localhost
-DNS.7 = funceme.cluster.local
-DNS.8 = cersei.funceme.local
-IP.1 = 172.31.134.8
-IP.2 = 127.0.0.1
+DNS.5 = kubernetes.default.svc.funceme.local
+DNS.6 = funceme.br
+DNS.7 = funceme.local
+DNS.8 = localhost
+DNS.9 = deckard.funceme.br
+IP.1 = 127.0.0.1
+IP.2 = 192.168.3.103
+
+
