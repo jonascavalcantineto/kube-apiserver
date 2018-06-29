@@ -19,5 +19,7 @@ jobs:
       # push the new Docker image to the Docker registry
       - run: 
           name: PUSH IMAGE
-          command: docker push $IMAGE_NAME
+          command: | 
+            IMAGE_NAME="jonascavalcantineto/kube-apiserver:1.9.8"
+            docker push $IMAGE_NAME
         
