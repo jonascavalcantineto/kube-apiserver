@@ -1,0 +1,22 @@
+version: 2
+jobs:
+  build:
+    docker: # See https://docs.docker.com/get-started/#docker-concepts if you are new to Docker.
+      - image: debian:stretch
+    steps:
+      - checkout
+      - run: 
+          name: VARIABLE
+          command: export IMAGE_NAME=jonascavalcantineto/kube-apiserver:1.9.8
+      # build the Docker image (this will use the Dockerfile in the root of the repo)
+      - run: 
+          name: BUILD IMAGE
+          command: docker build -t $IMAGE_NAME .
+      # authenticate with the Docker Hub registry
+      - run: 
+          name: LOGIN DOCKER HUB
+          command: docker login --username jonascavalcantineto@gmail.com --password j7b9c1n1
+      # push the new Docker image to the Docker registry
+      - run: 
+          name: PUSH IMAGE
+          command: docker push $IMAGE_NAME
