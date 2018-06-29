@@ -2,8 +2,8 @@ version: 2
 jobs:
   build:
     machine: true
-    branches:
-      - release-v1.9.8
+    branches: 
+      only: release-v1.9.8
     steps:
       - checkout
       # build the Docker image (this will use the Dockerfile in the root of the repo)
