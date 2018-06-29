@@ -15,7 +15,7 @@ jobs:
       # authenticate with the Docker Hub registry
       - run: 
           name: LOGIN DOCKER HUB
-          command: docker login --username jonascavalcantineto@gmail.com --password j7b9c1n1
+          command: docker login --username jonascavalcantineto --password j7b9c1n1
       # push the new Docker image to the Docker registry
       - run: 
           name: PUSH IMAGE
