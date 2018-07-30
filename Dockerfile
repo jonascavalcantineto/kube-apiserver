@@ -1,5 +1,5 @@
 FROM centos:7.4.1708
-LABEL MAINTAINER="unisp <cicero.gadelha@funceme.br | jonas.cavalcantineto@funceme.com>"
+LABEL MAINTAINER="<jonas.cavalcantineto@funceme.com>"
 
 RUN yum update -y 
 RUN yum install -y \
